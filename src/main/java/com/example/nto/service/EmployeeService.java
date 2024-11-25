@@ -4,6 +4,7 @@ import com.example.nto.entity.Employee;
 
 public interface EmployeeService {
 
+    Employee updateEmployee(long id, Employee newEmployee);
     Employee findByLogin(String login);
     Boolean findExistByLogin(String login);
 }
