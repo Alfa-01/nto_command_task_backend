@@ -62,13 +62,14 @@ public class EmployeeCodeServiceImpl implements EmployeeService, CodeService {
         updateEmployee(employeeId, employee);
 
         Optional<Code> codeOptional = codeRepository.findById(employeeId);
-        if (codeOptional.isEmpty())
-            throw new ResponseStatusException(HttpStatus.UNAUTHORIZED,
-                    "There is no account with login " + login + " or it is incorrect");
-
-        Code code = codeOptional.get();
-        code.setValue(newCode.getValue());
-
+        Code code;
+        if (codeOptional.isEmpty()) {
+            code = newCode;
+            code.setId(employeeId);
+        } else {
+            code = codeOptional.get();
+            code.setValue(newCode.getValue());
+        }
         return codeRepository.save(code);
     }
 
