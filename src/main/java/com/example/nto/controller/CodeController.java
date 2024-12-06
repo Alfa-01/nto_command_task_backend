@@ -15,8 +15,6 @@ public class CodeController {
 
     @PatchMapping("/api/{login}/open")
     public Code update(@PathVariable String login, @RequestBody Code newCode) {
-        if (newCode.getValue() == 0)
-            throw new ResponseStatusException(HttpStatus.BAD_REQUEST);
         return codeService.update(login, newCode);
     }
 }

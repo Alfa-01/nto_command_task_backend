@@ -55,8 +55,15 @@ public class EmployeeCodeServiceImpl implements EmployeeService, CodeService {
 
     @Override
     public Code update(String login, Code newCode) {
+
         Employee employee = findByLogin(login);
         long employeeId = employee.getId();
+
+        employee.setLastVisit(LocalDateTime.now());
+        updateEmployee(employeeId, employee);
+
+        if (newCode.getValue() == 0)
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST);
 
         Optional<Code> codeOptional = codeRepository.findById(employeeId);
         Code code;
@@ -70,9 +77,6 @@ public class EmployeeCodeServiceImpl implements EmployeeService, CodeService {
             }
             code.setValue(newCode.getValue());
         }
-
-        employee.setLastVisit(LocalDateTime.now());
-        updateEmployee(employeeId, employee);
 
         return codeRepository.save(code);
     }
