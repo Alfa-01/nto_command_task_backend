@@ -58,9 +58,6 @@ public class EmployeeCodeServiceImpl implements EmployeeService, CodeService {
         Employee employee = findByLogin(login);
         long employeeId = employee.getId();
 
-        employee.setLastVisit(LocalDateTime.now());
-        updateEmployee(employeeId, employee);
-
         Optional<Code> codeOptional = codeRepository.findById(employeeId);
         Code code;
         if (codeOptional.isEmpty()) {
@@ -73,6 +70,10 @@ public class EmployeeCodeServiceImpl implements EmployeeService, CodeService {
             }
             code.setValue(newCode.getValue());
         }
+
+        employee.setLastVisit(LocalDateTime.now());
+        updateEmployee(employeeId, employee);
+
         return codeRepository.save(code);
     }
 
