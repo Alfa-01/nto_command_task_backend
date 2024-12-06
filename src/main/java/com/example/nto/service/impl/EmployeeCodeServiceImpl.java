@@ -1,6 +1,5 @@
 package com.example.nto.service.impl;
 
-import com.example.nto.entity.Code;
 import com.example.nto.entity.Employee;
 import com.example.nto.repository.CodeRepository;
 import com.example.nto.repository.EmployeeRepository;
@@ -45,7 +44,7 @@ public class EmployeeCodeServiceImpl implements EmployeeService, CodeService {
     }
 
     @Override
-    public Boolean findExistByLogin(String login) {
+    public boolean findExistByLogin(String login) {
         if (employeeRepository.findExistByLogin(login))
             throw new ResponseStatusException(HttpStatus.OK, "Login is existing, processing");
         throw new ResponseStatusException(HttpStatus.UNAUTHORIZED,
@@ -54,31 +53,20 @@ public class EmployeeCodeServiceImpl implements EmployeeService, CodeService {
     }
 
     @Override
-    public Code update(String login, Code newCode) {
-
-        Employee employee = findByLogin(login);
-        long employeeId = employee.getId();
-
-        employee.setLastVisit(LocalDateTime.now());
-        updateEmployee(employeeId, employee);
-
-        if (newCode.getValue() == 0)
-            throw new ResponseStatusException(HttpStatus.BAD_REQUEST);
-
-        Optional<Code> codeOptional = codeRepository.findById(employeeId);
-        Code code;
-        if (codeOptional.isEmpty()) {
-            code = newCode;
-            code.setId(employeeId);
-        } else {
-            code = codeOptional.get();
-            if (code.getValue() != newCode.getValue()) {
-                throw new ResponseStatusException(HttpStatus.BAD_REQUEST);
-            }
-            code.setValue(newCode.getValue());
+    public Employee openDoor(String login, Long value) {
+        if (findByLogin(login) != null && findExistByValue(value)) {
+            Employee employee = findByLogin(login);
+            employee.setLastVisit(LocalDateTime.now());
+            return updateEmployee(employee.getId(), employee);
         }
 
-        return codeRepository.save(code);
+        throw new ResponseStatusException(HttpStatus.BAD_REQUEST);
     }
 
+    @Override
+    public Boolean findExistByValue(Long value) {
+        if (codeRepository.findExistByValue(value))
+            return codeRepository.findExistByValue(value);
+        throw new ResponseStatusException(HttpStatus.BAD_REQUEST);
+    }
 }

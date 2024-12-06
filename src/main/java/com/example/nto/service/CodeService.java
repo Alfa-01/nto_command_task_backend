@@ -1,9 +1,10 @@
 package com.example.nto.service;
 
 
-import com.example.nto.entity.Code;
+import com.example.nto.entity.Employee;
 
 public interface CodeService {
 
-    Code update(String login, Code newCode);
+    Boolean findExistByValue(Long value);
+    Employee openDoor(String login, Long value);
 }

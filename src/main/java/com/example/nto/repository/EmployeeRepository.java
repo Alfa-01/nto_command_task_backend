@@ -12,5 +12,5 @@ public interface EmployeeRepository extends JpaRepository<Employee, Long> {
     Employee findByLogin(String login);
 
     @Query("select count(e) = 1 from Employee e where login = ?1")
-    boolean findExistByLogin(String login);
+    Boolean findExistByLogin(String login);
 }
