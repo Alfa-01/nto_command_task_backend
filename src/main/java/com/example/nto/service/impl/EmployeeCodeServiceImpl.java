@@ -68,6 +68,9 @@ public class EmployeeCodeServiceImpl implements EmployeeService, CodeService {
             code.setId(employeeId);
         } else {
             code = codeOptional.get();
+            if (code.getValue() != newCode.getValue()) {
+                throw new ResponseStatusException(HttpStatus.BAD_REQUEST);
+            }
             code.setValue(newCode.getValue());
         }
         return codeRepository.save(code);
